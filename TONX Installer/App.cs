@@ -7,7 +7,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -55,7 +54,7 @@ class App
         if (FindPath_StoreRegister(ref Game_Path)) goto ConfirmPath;
         if (FindPath_MuiCacheRegister(ref Game_Path)) goto ConfirmPath;
 
-    StartManualSelect:
+        StartManualSelect:
 
         FolderPicker dialog = new();
         dialog.Title = "请选择 AmongUs 游戏目录：";
@@ -186,7 +185,7 @@ class App
             else
             {
                 string supportMsg = "TONX 支持的 AmongUs 版本：";
-                foreach(var ver in supportVersionList) supportMsg += ver.ToString() + " 或 ";
+                foreach (var ver in supportVersionList) supportMsg += ver.ToString() + " 或 ";
                 supportMsg = supportMsg.TrimEnd('或').Trim();
                 string yourVerMsg = "您的 AmongUs 版本：" + gameVer?.ToString();
                 MessageBox.Show($"安装失败，您的 AmongUs 版本不受支持\n{supportMsg}\n{yourVerMsg}", "错误：", MessageBoxButton.OK, MessageBoxImage.Error);
