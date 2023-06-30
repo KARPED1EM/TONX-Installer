@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <RootNamespace>TONX_Installer</RootNamespace>
+		<PublishSingleFile>true</PublishSingleFile>
+		<RuntimeIdentifier>win10-x86</RuntimeIdentifier>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+		<SelfContained>true</SelfContained>
+		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+        <ApplicationIcon>AU.ico</ApplicationIcon>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="Resource\**" />
+        <EmbeddedResource Include="Resource\**" />
+        <Content Include="AU.ico" />
+    </ItemGroup>
+
+</Project>
