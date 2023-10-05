@@ -16,8 +16,7 @@ class App
 {
     static readonly Dictionary<string, Version> EachVersionMD5 = new()
     {
-        { "254321c6fdf0b1de79aff77fa6ad825e", new(2023, 6, 13) },
-        { "908fe1e7366c7e7d44d385c0e47fad50", new(2023, 3, 28) },
+        { "4c159725b4872eda509dfecfef3d0293", new(2023, 7, 13) },
     };
     static readonly List<string> GameFilesWhiteList = new()
     {
@@ -92,7 +91,7 @@ class App
 
     PathFound:
 
-        string gameMd5 = GetMD5HashFromFile(Game_Path + "Among Us.exe");
+        string gameMd5 = GetMD5HashFromFile(Game_Path + "GameAssembly.dll");
         if (!EachVersionMD5.TryGetValue(gameMd5, out var gameVer) || gameVer == null)
         {
             MessageBox.Show($"安装失败，您的 AmongUs 版本不受支持", "错误：", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -186,7 +185,7 @@ class App
             {
                 string supportMsg = "TONX 支持的 AmongUs 版本：";
                 foreach (var ver in supportVersionList) supportMsg += ver.ToString() + " 或 ";
-                supportMsg = supportMsg.TrimEnd('或').Trim();
+                supportMsg = supportMsg.Trim().TrimEnd('或');
                 string yourVerMsg = "您的 AmongUs 版本：" + gameVer?.ToString();
                 MessageBox.Show($"安装失败，您的 AmongUs 版本不受支持\n{supportMsg}\n{yourVerMsg}", "错误：", MessageBoxButton.OK, MessageBoxImage.Error);
                 RestoreVanillaGame();
