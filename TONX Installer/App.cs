@@ -16,7 +16,8 @@ class App
 {
     static readonly Dictionary<string, Version> EachVersionMD5 = new()
     {
-        { "4c159725b4872eda509dfecfef3d0293", new(2023, 7, 12) },
+        { "4c159725b4872eda509dfecfef3d0293", new(2023, 7, 12) }, // Steam
+        { "499bf5c2fc6aeb335e380f8156b6569d", new(2023, 7, 12) }, // Epic
     };
     static readonly List<string> GameFilesWhiteList = new()
     {
