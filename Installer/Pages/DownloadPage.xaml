@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Installer.Pages.DownloadPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Installer.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:DefaultBindMode="TwoWay"
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel Orientation="Vertical" Margin="50, 50, 50, 50" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+
+            <TextBlock
+                Text="{x:Bind BepInExDownloadProgressText, UpdateSourceTrigger=PropertyChanged}"
+                FontSize="18"
+                FontWeight="SemiBold"
+                Margin="0, 50, 0, 20"/>
+
+            <ProgressBar Width="450" Value="{x:Bind BepInExDownloadProgress, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock
+                Text="{x:Bind PluginDownloadProgressText, UpdateSourceTrigger=PropertyChanged}"
+                FontSize="18"
+                FontWeight="SemiBold"
+                Margin="0, 50, 0, 20"/>
+
+            <ProgressBar Width="450" Value="{x:Bind PluginDownloadProgress, UpdateSourceTrigger=PropertyChanged}" />
+
+        </StackPanel>
+    </Grid>
+</Page>
