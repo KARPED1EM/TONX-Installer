@@ -107,7 +107,7 @@ public sealed partial class DownloadPage : Page, IPage
             }
         });
         downloader.DownloadProgressChanged += OnDownloadProgressChanged;
-        
+
         string gamePath = SelectPathPage.Current.SelectedPath.TrimEnd('\\').TrimEnd('/');
         string pluginsPath = gamePath + "/BepInEx/plugins";
 

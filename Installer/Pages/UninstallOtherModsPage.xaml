@@ -18,6 +18,7 @@
                 Text="{x:Bind lang:Lang.DeleteUnusedPluginsWarning, Mode=OneWay}"
                 FontSize="18"
                 FontWeight="SemiBold"
+                Foreground="Red"
                 Margin="0, 50, 0, 20"/>
             
             <ListView MaxHeight="280"
