@@ -97,9 +97,17 @@ public sealed partial class DownloadPage : Page, IPage
 
     private async void StartDownlaodAsync()
     {
-        var downloader = new DownloadService();
+        var downloader = new DownloadService(new()
+        {
+            RequestConfiguration = new()
+            {
+                AllowAutoRedirect = true,
+                KeepAlive = true,
+                Referer = "https://tonx.cc",
+            }
+        });
         downloader.DownloadProgressChanged += OnDownloadProgressChanged;
-
+        
         string gamePath = SelectPathPage.Current.SelectedPath.TrimEnd('\\').TrimEnd('/');
         string pluginsPath = gamePath + "/BepInEx/plugins";
 
