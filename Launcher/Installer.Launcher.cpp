@@ -9,12 +9,14 @@
 
 using namespace std::filesystem;
 
-static int wmain(int argc, wchar_t* argv[])
+
+
+int wmain(int argc, wchar_t* argv[])
 {
 	std::wstring run_exe, arg = std::wstring(GetCommandLine()).substr(std::wstring(argv[0]).length() + 2);
 
 	auto base_folder = path(argv[0]).parent_path();
-	auto& version = path(base_folder).append("version.ini");
+	auto version = path(base_folder).append("version.ini");
 	if (exists(version))
 	{
 		INIReader ini(version.string());
@@ -24,7 +26,7 @@ static int wmain(int argc, wchar_t* argv[])
 			if (app_folder.length())
 			{
 				auto exe_name = ini.Get("", "exe_name", "Installer.exe");
-				auto& target_exe = path(base_folder).append(app_folder).append(exe_name);
+				auto target_exe = path(base_folder).append(app_folder).append(exe_name);
 				if (exists(target_exe))
 				{
 					run_exe = target_exe.wstring();
@@ -37,11 +39,11 @@ static int wmain(int argc, wchar_t* argv[])
 	{
 		path target_exe;
 		file_time_type last_time;
-		for (auto& folder : directory_iterator(base_folder))
+		for (auto folder : directory_iterator(base_folder))
 		{
 			if (folder.is_directory())
 			{
-				auto& exe = path(folder).append(L"Installer.exe");
+				auto exe = path(folder).append(L"Installer.exe");
 				if (exists(exe))
 				{
 					auto time = last_write_time(exe);
@@ -71,7 +73,7 @@ static int wmain(int argc, wchar_t* argv[])
 		CloseHandle(pi.hThread);
 
 		auto base_name = path(run_exe).parent_path().filename().wstring();
-		for (auto& folder : directory_iterator(base_folder))
+		for (auto folder : directory_iterator(base_folder))
 		{
 			auto folder_name = folder.path().filename().wstring();
 			if (folder.is_directory() && folder_name.starts_with(L"app-") && folder_name.compare(base_name))
