@@ -61,7 +61,7 @@ namespace Installer.Localization {
         }
         
         /// <summary>
-        ///   查找类似 The installation is complete, thank you for your support of TONX! 的本地化字符串。
+        ///   查找类似 Thank you for installing TONX! 的本地化字符串。
         /// </summary>
         public static string AllDoneTips {
             get {

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AllDoneTips" xml:space="preserve">
-    <value>The installation is complete, thank you for your support of TONX!</value>
+    <value>Thank you for installing TONX!</value>
   </data>
   <data name="DeleteUnusedPluginsWarning" xml:space="preserve">
     <value>The following mods will be removed after continuing</value>
