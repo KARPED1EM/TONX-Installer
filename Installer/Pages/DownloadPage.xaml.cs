@@ -1,5 +1,4 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using Downloader;
 using Installer.Localization;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -10,7 +9,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace Installer.Pages;
 
@@ -56,7 +55,7 @@ public sealed partial class DownloadPage : Page, IPage
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        var thread = new Thread(StartDownlaodAsync);
+        var thread = new System.Threading.Thread(StartDownlaodAsync);
         thread.Start();
     }
 
@@ -97,17 +96,6 @@ public sealed partial class DownloadPage : Page, IPage
 
     private async void StartDownlaodAsync()
     {
-        var downloader = new DownloadService(new()
-        {
-            RequestConfiguration = new()
-            {
-                AllowAutoRedirect = true,
-                KeepAlive = true,
-                Referer = "https://tonx.cc",
-            }
-        });
-        downloader.DownloadProgressChanged += OnDownloadProgressChanged;
-
         string gamePath = SelectPathPage.Current.SelectedPath.TrimEnd('\\').TrimEnd('/');
         string pluginsPath = gamePath + "/BepInEx/plugins";
 
@@ -145,14 +133,13 @@ public sealed partial class DownloadPage : Page, IPage
 
         // 下载 BepInEx
         DownloadingBepInEx = true; DownloadingPlugin = false;
-        await downloader.DownloadFileTaskAsync(BepInExDownloadUrl, BepInExTempPath);
-        if (downloader.Status != DownloadStatus.Completed)
+        string bepInExDownloadRet = DownloadFile(BepInExDownloadUrl, BepInExTempPath).Result;
+        if (!string.IsNullOrEmpty(bepInExDownloadRet))
         {
-            UpdateBepInExProgress($"{Lang.Download_BepInEx_Failed}: {downloader.Status}", null);
+            UpdateBepInExProgress($"{Lang.Download_BepInEx_Failed}: {bepInExDownloadRet}", null);
             SetFailed(Lang.PlzTryAgainUsingOtherDownlodChennel);
             return;
         }
-        await downloader.Clear();
 
         // 解压 BepInEx 至游戏目录
         UpdateBepInExProgress(Lang.Install_BepInEx_Extracting, null);
@@ -183,14 +170,13 @@ public sealed partial class DownloadPage : Page, IPage
             SetFailed(Lang.PlzTryAgainUsingOtherDownlodChennel);
             return;
         }
-        await downloader.DownloadFileTaskAsync(pluginUrl, pluginPath);
-        if (downloader.Status != DownloadStatus.Completed)
+        string pluginDownloadRet = DownloadFile(pluginUrl, pluginPath).Result;
+        if (!string.IsNullOrEmpty(pluginDownloadRet))
         {
-            UpdatePluginProgress($"{Lang.Download_TONX_Failed}: {downloader.Status}", null);
+            UpdatePluginProgress($"{Lang.Download_TONX_Failed}: {pluginDownloadRet}", null);
             SetFailed(Lang.PlzTryAgainUsingOtherDownlodChennel);
             return;
         }
-        downloader.Dispose();
 
         UpdatePluginProgress(Lang.Install_TONX_Done, 100);
 
@@ -200,28 +186,33 @@ public sealed partial class DownloadPage : Page, IPage
         PageControl.GetPageByInstance(DonePage.Current).Show();
     }
 
+    private async Task<string> DownloadFile(string url, string fileName)
+    {
+        using var client = new HttpClientDownloadWithProgress(url, fileName);
+        client.ProgressChanged += OnDownloadProgressChanged;
+
+        try { await client.StartDownload(); }
+        catch (Exception ex)
+        { return ex.Message; }
+
+        return string.Empty;
+    }
+
     private int lastUpdateTime;
-    private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+    private void OnDownloadProgressChanged(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage)
     {
         if (lastUpdateTime == DateTime.Now.Millisecond / 200) return;
         lastUpdateTime = DateTime.Now.Millisecond / 200;
 
         Current.DispatcherQueue.TryEnqueue(() =>
         {
-            var speed = e.BytesPerSecondSpeed / 1000;
-            string speedText = $"{speed:#0.00} KB/s";
-            if (speed > 1000)
-            {
-                speed /= 1000;
-                speedText = $"{speed:#0.00} MB/s";
-            }
-
-            if (DownloadingPlugin) UpdatePluginProgress($"{Lang.Install_TONX_Downloading} ({speedText})", e.ProgressPercentage);
-            else if (DownloadingBepInEx) UpdateBepInExProgress($"{Lang.Install_BepInEx_Downloading} ({speedText})", e.ProgressPercentage);
+            string percentageText = $" ({progressPercentage:#0}%)";
+            if (DownloadingPlugin) UpdatePluginProgress(Lang.Install_TONX_Downloading + percentageText, progressPercentage);
+            else if (DownloadingBepInEx) UpdateBepInExProgress(Lang.Install_BepInEx_Downloading + percentageText, progressPercentage);
         });
     }
 
-    private void SetFailed(string msg)
+    private static void SetFailed(string msg)
     {
         AllDone = true;
         FaildMsg = msg;

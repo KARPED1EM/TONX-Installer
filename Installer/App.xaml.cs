@@ -10,7 +10,7 @@ public partial class App : Application
         this.InitializeComponent();
 
 #if DEBUG
-        CultureInfo.CurrentUICulture = new CultureInfo("zh-TW");
+        CultureInfo.CurrentUICulture = new CultureInfo("zh-CN");
 #endif
     }
 
